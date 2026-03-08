@@ -8,6 +8,11 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  app.get(api.churches.list.path, async (req, res) => {
+    const data = await storage.getChurches();
+    res.json(data);
+  });
+
   app.get(api.attendances.list.path, async (req, res) => {
     const data = await storage.getAttendances();
     res.json(data);
@@ -17,6 +22,7 @@ export async function registerRoutes(
     try {
       // Coerce numeric strings to numbers and date strings to dates as needed
       const bodySchema = api.attendances.create.input.extend({
+        igrejaId: z.coerce.number(),
         adultos: z.coerce.number(),
         criancas: z.coerce.number(),
         convidados: z.coerce.number(),

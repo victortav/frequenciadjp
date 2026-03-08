@@ -20,7 +20,7 @@ import {
   Send, TrendingUp, BarChart3 
 } from "lucide-react";
 
-import { useAttendances, useCreateAttendance } from "@/hooks/use-attendances";
+import { useAttendances, useCreateAttendance, useChurches } from "@/hooks/use-attendances";
 import { insertAttendanceSchema } from "@shared/routes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +36,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -47,18 +54,19 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Zod schema with coercion for form inputs
 const formSchema = insertAttendanceSchema.extend({
+  igrejaId: z.coerce.number().min(1, "Selecione uma igreja"),
   adultos: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),
   criancas: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),
   convidados: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),
   veiculos: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),
   data: z.string().min(1, "A data é obrigatória"),
-  igreja: z.string().min(1, "A igreja é obrigatória"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export default function Home() {
   const { toast } = useToast();
+  const { data: churches, isLoading: isLoadingChurches } = useChurches();
   const { data: attendances, isLoading: isLoadingData } = useAttendances();
   const { mutate: createAttendance, isPending: isCreating } = useCreateAttendance();
 
@@ -66,7 +74,7 @@ export default function Home() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      igreja: "",
+      igrejaId: 0,
       adultos: 0,
       criancas: 0,
       convidados: 0,
@@ -90,7 +98,7 @@ export default function Home() {
           criancas: 0,
           convidados: 0,
           veiculos: 0,
-        });
+        }, { keepValues: true });
       },
       onError: (error) => {
         toast({
@@ -178,19 +186,30 @@ export default function Home() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
-                      name="igreja"
+                      name="igrejaId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="font-semibold text-foreground/80 flex items-center gap-2">
                             <Church className="w-4 h-4 text-muted-foreground" />
-                            Nome da Igreja / Congregação
+                            Selecionar Igreja
                           </FormLabel>
                           <FormControl>
-                            <Input 
-                              placeholder="Ex: Sede, Congregação X..." 
-                              className="h-12 rounded-xl bg-background border-2 focus-visible:ring-primary/20" 
-                              {...field} 
-                            />
+                            <Select 
+                              value={String(field.value)} 
+                              onValueChange={(val) => field.onChange(parseInt(val, 10))}
+                              disabled={isLoadingChurches}
+                            >
+                              <SelectTrigger className="h-12 rounded-xl bg-background border-2 focus-visible:ring-primary/20">
+                                <SelectValue placeholder="Escolha uma igreja..." />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {churches?.map((church) => (
+                                  <SelectItem key={church.id} value={String(church.id)}>
+                                    {church.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

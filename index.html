@@ -4,99 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Frequência DJP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>📊 Controle de Frequência DJP</h1>
-        </header>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-primary sticky-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">📊 Controle de Frequência DJP</span>
+        </div>
+    </nav>
 
+    <div class="container mt-5 mb-5">
         <main>
             <!-- Formulário -->
-            <section class="form-section">
-                <h2>Registrar Frequência</h2>
-                <form id="frequencyForm">
-                    <div class="form-group">
-                        <label for="igreja">Igreja:</label>
-                        <select id="igreja" required>
-                            <option value="">Selecione uma igreja</option>
-                            <option value="Igreja Central">Igreja Central</option>
-                            <option value="Igreja Norte">Igreja Norte</option>
-                            <option value="Igreja Sul">Igreja Sul</option>
-                            <option value="Igreja Leste">Igreja Leste</option>
-                            <option value="Igreja Oeste">Igreja Oeste</option>
-                        </select>
+            <section class="mb-5">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">✏️ Registrar Frequência</h5>
                     </div>
+                    <div class="card-body">
+                        <form id="frequencyForm">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="igreja" class="form-label">Igreja:</label>
+                                    <select id="igreja" class="form-select" required>
+                                        <option value="">Selecione uma igreja</option>
+                                        <option value="Igreja Central">Igreja Central</option>
+                                        <option value="Igreja Norte">Igreja Norte</option>
+                                        <option value="Igreja Sul">Igreja Sul</option>
+                                        <option value="Igreja Leste">Igreja Leste</option>
+                                        <option value="Igreja Oeste">Igreja Oeste</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="data" class="form-label">Data:</label>
+                                    <input type="date" id="data" class="form-control" required>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="data">Data:</label>
-                        <input type="date" id="data" required>
+                            <div class="row mb-3">
+                                <div class="col-md-3">
+                                    <label for="pessoas" class="form-label">Número de Pessoas:</label>
+                                    <input type="number" id="pessoas" class="form-control" min="0" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="criancas" class="form-label">Crianças:</label>
+                                    <input type="number" id="criancas" class="form-control" min="0" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="veiculos" class="form-label">Veículos:</label>
+                                    <input type="number" id="veiculos" class="form-control" min="0" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="convidadas" class="form-label">Convidadas:</label>
+                                    <input type="number" id="convidadas" class="form-control" min="0" required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-success">💾 Salvar</button>
+                                <button type="reset" class="btn btn-secondary">🔄 Limpar</button>
+                            </div>
+                        </form>
+                        <div id="mensagem" class="alert alert-info mt-3 d-none"></div>
                     </div>
-
-                    <div class="form-group">
-                        <label for="pessoas">Número de Pessoas:</label>
-                        <input type="number" id="pessoas" min="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="criancas">Número de Crianças:</label>
-                        <input type="number" id="criancas" min="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="veiculos">Número de Veículos:</label>
-                        <input type="number" id="veiculos" min="0" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="convidadas">Número de Pessoas Convidadas:</label>
-                        <input type="number" id="convidadas" min="0" required>
-                    </div>
-
-                    <button type="submit" class="btn-salvar">💾 Salvar</button>
-                </form>
-                <div id="mensagem" class="mensagem"></div>
+                </div>
             </section>
 
             <!-- Gráfico -->
-            <section class="chart-section">
-                <h2>Últimos 10 Domingos</h2>
-                <div class="chart-container">
-                    <canvas id="frequencyChart"></canvas>
+            <section class="mb-5">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">📈 Últimos 10 Domingos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="frequencyChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Estatísticas -->
-            <section class="stats-section">
-                <h2>Estatísticas</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Total de Pessoas</h3>
-                        <p id="totalPessoas">0</p>
+            <section>
+                <h5 class="mb-4">📋 Estatísticas</h5>
+                <div class="row g-3">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card shadow-sm border-0 bg-info text-white">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Total de Pessoas</h6>
+                                <h2 id="totalPessoas" class="mb-0">0</h2>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Média de Pessoas</h3>
-                        <p id="mediaPessoas">0</p>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card shadow-sm border-0 bg-warning text-dark">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Média de Pessoas</h6>
+                                <h2 id="mediaPessoas" class="mb-0">0</h2>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Total de Crianças</h3>
-                        <p id="totalCriancas">0</p>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card shadow-sm border-0 bg-danger text-white">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Total de Crianças</h6>
+                                <h2 id="totalCriancas" class="mb-0">0</h2>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Total de Veículos</h3>
-                        <p id="totalVeiculos">0</p>
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card shadow-sm border-0 bg-secondary text-white">
+                            <div class="card-body text-center">
+                                <h6 class="card-title">Total de Veículos</h6>
+                                <h2 id="totalVeiculos" class="mb-0">0</h2>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
-
-        <footer>
-            <p>&copy; 2026 Controle de Frequência DJP</p>
-        </footer>
     </div>
 
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p class="mb-0">&copy; 2026 Controle de Frequência DJP</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, type InsertAttendance, type Attendance } from "@shared/routes";
+import { api, type InsertAttendance, type Attendance, churches } from "@shared/routes";
 import { z } from "zod";
 
 function parseWithLogging<T>(schema: z.ZodSchema<T>, data: unknown, label: string): T {
@@ -9,6 +9,18 @@ function parseWithLogging<T>(schema: z.ZodSchema<T>, data: unknown, label: strin
     throw result.error;
   }
   return result.data;
+}
+
+export function useChurches() {
+  return useQuery({
+    queryKey: [api.churches.list.path],
+    queryFn: async () => {
+      const res = await fetch(api.churches.list.path, { credentials: "include" });
+      if (!res.ok) throw new Error('Falha ao carregar igrejas');
+      const data = await res.json();
+      return parseWithLogging(api.churches.list.responses[200], data, "churches.list");
+    },
+  });
 }
 
 export function useAttendances() {

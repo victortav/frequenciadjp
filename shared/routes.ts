@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { insertAttendanceSchema, attendances } from "./schema";
+import { insertAttendanceSchema, attendances, insertChurchSchema, churches } from "./schema";
 
-export { insertAttendanceSchema, attendances };
+export { insertAttendanceSchema, attendances, insertChurchSchema, churches };
 
 export const errorSchemas = {
   validation: z.object({
@@ -17,6 +17,15 @@ export const errorSchemas = {
 };
 
 export const api = {
+  churches: {
+    list: {
+      method: "GET" as const,
+      path: "/api/churches" as const,
+      responses: {
+        200: z.array(z.custom<typeof churches.$inferSelect>()),
+      },
+    },
+  },
   attendances: {
     list: {
       method: "GET" as const,

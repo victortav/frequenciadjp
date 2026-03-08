@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Frequência DJP</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Controle de Frequência DJP</h1>
+        </header>
+
+        <main>
+            <!-- Formulário -->
+            <section class="form-section">
+                <h2>Registrar Frequência</h2>
+                <form id="frequencyForm">
+                    <div class="form-group">
+                        <label for="igreja">Igreja:</label>
+                        <select id="igreja" required>
+                            <option value="">Selecione uma igreja</option>
+                            <option value="Igreja Central">Igreja Central</option>
+                            <option value="Igreja Norte">Igreja Norte</option>
+                            <option value="Igreja Sul">Igreja Sul</option>
+                            <option value="Igreja Leste">Igreja Leste</option>
+                            <option value="Igreja Oeste">Igreja Oeste</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pessoas">Número de Pessoas:</label>
+                        <input type="number" id="pessoas" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="criancas">Número de Crianças:</label>
+                        <input type="number" id="criancas" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="veiculos">Número de Veículos:</label>
+                        <input type="number" id="veiculos" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="convidadas">Número de Pessoas Convidadas:</label>
+                        <input type="number" id="convidadas" min="0" required>
+                    </div>
+
+                    <button type="submit" class="btn-salvar">💾 Salvar</button>
+                </form>
+                <div id="mensagem" class="mensagem"></div>
+            </section>
+
+            <!-- Gráfico -->
+            <section class="chart-section">
+                <h2>Últimos 10 Domingos</h2>
+                <div class="chart-container">
+                    <canvas id="frequencyChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Estatísticas -->
+            <section class="stats-section">
+                <h2>Estatísticas</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total de Pessoas</h3>
+                        <p id="totalPessoas">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Média de Pessoas</h3>
+                        <p id="mediaPessoas">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total de Crianças</h3>
+                        <p id="totalCriancas">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total de Veículos</h3>
+                        <p id="totalVeiculos">0</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Controle de Frequência DJP</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

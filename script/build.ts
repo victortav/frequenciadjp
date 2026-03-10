@@ -2,7 +2,15 @@ import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
 import fs from "fs";
+<<<<<<< HEAD
 import path from "path";
+=======
+
+fs.copyFileSync(
+  "node_modules/connect-pg-simple/table.sql",
+  "dist/table.sql"
+);
+>>>>>>> 5558a8e (Published your App)
 
 // server deps to bundle to reduce openat syscalls
 const allowlist = [

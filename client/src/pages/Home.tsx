@@ -21,9 +21,19 @@ import {
 } from "lucide-react";
 
 import { useAttendances, useCreateAttendance, useChurches } from "@/hooks/use-attendances";
+import { useAuth } from "@/hooks/use-auth";
 import { insertAttendanceSchema } from "@shared/routes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useToast } from "@/hooks/use-toast";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { LogOut, User } from "lucide-react";
 
 import {
   Form,
@@ -66,6 +76,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function Home() {
   const { toast } = useToast();
+  const { user, logout } = useAuth();
   const { data: churches, isLoading: isLoadingChurches } = useChurches();
   const { data: attendances, isLoading: isLoadingData } = useAttendances();
   const { mutate: createAttendance, isPending: isCreating } = useCreateAttendance();
@@ -161,7 +172,34 @@ export default function Home() {
               Frequência DJP
             </h1>
           </div>
-          <ThemeToggle />
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10 border-2 border-primary/20">
+                    <AvatarImage src={user?.picture || ""} alt={user?.displayName || ""} />
+                    <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                      {user?.displayName?.[0]?.toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user?.displayName}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                  </div>
+                </div>
+                <DropdownMenuItem className="text-destructive focus:text-destructive cursor-pointer" onClick={() => logout()}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sair</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </header>
 

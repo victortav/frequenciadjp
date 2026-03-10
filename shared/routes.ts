@@ -17,6 +17,22 @@ export const errorSchemas = {
 };
 
 export const api = {
+  auth: {
+    me: {
+      method: "GET" as const,
+      path: "/api/auth/me" as const,
+      responses: {
+        200: z.custom<typeof users.$inferSelect>().nullable(),
+      },
+    },
+    logout: {
+      method: "POST" as const,
+      path: "/api/auth/logout" as const,
+      responses: {
+        200: z.object({ success: z.boolean() }),
+      },
+    },
+  },
   churches: {
     list: {
       method: "GET" as const,
@@ -37,10 +53,11 @@ export const api = {
     create: {
       method: "POST" as const,
       path: "/api/attendances" as const,
-      input: insertAttendanceSchema,
+      input: insertAttendanceSchema.omit({ userId: true }),
       responses: {
         201: z.custom<typeof attendances.$inferSelect>(),
         400: errorSchemas.validation,
+        401: z.object({ message: z.string() }),
       },
     },
   },

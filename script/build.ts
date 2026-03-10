@@ -2,14 +2,9 @@ import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import { rm, readFile } from "fs/promises";
 import fs from "fs";
+import path from "path";
 
-fs.copyFileSync(
-  "node_modules/connect-pg-simple/table.sql",
-  "dist/table.sql"
-);
-
-// server deps to bundle to reduce openat(2) syscalls
-// which helps cold start times
+// server deps to bundle to reduce openat syscalls
 const allowlist = [
   "@google/generative-ai",
   "axios",
@@ -65,6 +60,17 @@ async function buildAll() {
     external: externals,
     logLevel: "info",
   });
+
+  // COPIAR SQL DEPOIS DO BUILD
+  const source = path.resolve("node_modules/connect-pg-simple/table.sql");
+  const destination = path.resolve("dist/table.sql");
+
+  if (fs.existsSync(source)) {
+    fs.copyFileSync(source, destination);
+    console.log("✓ table.sql copied to dist/");
+  } else {
+    console.error("✗ table.sql not found");
+  }
 }
 
 buildAll().catch((err) => {

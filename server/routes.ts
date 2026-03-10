@@ -28,6 +28,7 @@ export async function registerRoutes(
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.set("trust proxy", 1);
 
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;

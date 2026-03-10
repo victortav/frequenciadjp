@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, date, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, json, serial, integer, date, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -34,6 +34,12 @@ export const insertChurchSchema = createInsertSchema(churches).omit({
 export const insertAttendanceSchema = createInsertSchema(attendances).omit({
   id: true,
   createdAt: true,
+});
+
+export const sessions = pgTable("session", {
+  sid: text("sid").primaryKey(),
+  sess: json("sess").notNull(),
+  expire: timestamp("expire").notNull(),
 });
 
 export type User = typeof users.$inferSelect;

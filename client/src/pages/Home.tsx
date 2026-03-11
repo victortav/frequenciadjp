@@ -96,6 +96,8 @@ export default function Home() {
   });
 
   const onSubmit = (values: FormValues) => {
+    console.log("SUBMIT", values);
+
     createAttendance(values, {
       onSuccess: () => {
         toast({

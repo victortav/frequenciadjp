@@ -381,6 +381,7 @@ export default function Home() {
                       type="submit" 
                       size="lg"
                       disabled={isCreating}
+                      onClick={() => console.log("BUTTON CLICKED")}
                       className="w-full sm:w-auto h-14 px-8 rounded-xl font-bold text-lg shadow-lg shadow-primary/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
                     >
                       {isCreating ? (

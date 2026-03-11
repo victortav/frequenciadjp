@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -80,6 +80,7 @@ export default function Home() {
   const { data: churches, isLoading: isLoadingChurches } = useChurches();
   const { data: attendances, isLoading: isLoadingData } = useAttendances();
   const { mutate: createAttendance, isPending: isCreating } = useCreateAttendance();
+  const [selectedChurchId, setSelectedChurchId] = useState<number | null>(null);
 
   // Initialize form with default values (today's date)
   const form = useForm<FormValues>({
@@ -121,7 +122,7 @@ export default function Home() {
     });
   };
 
-  // Process data for the last 10 Sundays chart
+  // Process data for the last 10 Sundays chart, filtered by selected church
   const chartData = useMemo(() => {
     if (!attendances) return [];
 
@@ -143,7 +144,10 @@ export default function Home() {
         const recordDateStr = typeof a.data === 'string' 
           ? a.data.substring(0, 10) 
           : new Date(a.data).toISOString().substring(0, 10);
-        return recordDateStr === dateStr;
+        
+        // Filter by church if selected
+        const matchesChurch = selectedChurchId ? a.igrejaId === selectedChurchId : true;
+        return recordDateStr === dateStr && matchesChurch;
       });
 
       // Sum all people types
@@ -157,7 +161,7 @@ export default function Home() {
         total: totalPessoas,
       };
     });
-  }, [attendances]);
+  }, [attendances, selectedChurchId]);
 
   return (
     <div className="min-h-screen pb-16">
@@ -234,7 +238,11 @@ export default function Home() {
                           <FormControl>
                             <Select 
                               value={String(field.value)} 
-                              onValueChange={(val) => field.onChange(parseInt(val, 10))}
+                              onValueChange={(val) => {
+                                const churchId = parseInt(val, 10);
+                                field.onChange(churchId);
+                                setSelectedChurchId(churchId);
+                              }}
                               disabled={isLoadingChurches}
                             >
                               <SelectTrigger className="h-12 rounded-xl bg-background border-2 focus-visible:ring-primary/20">

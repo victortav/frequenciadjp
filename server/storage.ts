@@ -8,7 +8,7 @@ export interface IStorage {
   createOrUpdateUser(user: InsertUser): Promise<User>;
   getChurches(): Promise<Church[]>;
   getAttendances(userId?: number): Promise<Attendance[]>;
-  createAttendance(attendance: InsertAttendance): Promise<Attendance>;
+  createAttendance(attendance: InsertAttendance & { userId: number }): Promise<Attendance>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -49,10 +49,19 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(attendances).orderBy(desc(attendances.data));
   }
 
-  async createAttendance(insertAttendance: InsertAttendance): Promise<Attendance> {
+  async createAttendance(insertAttendance: InsertAttendance & { userId: number }): Promise<Attendance> {
     const [attendance] = await db
       .insert(attendances)
       .values(insertAttendance)
+      .onConflictDoUpdate({
+        target: [attendances.igrejaId, attendances.data, attendances.userId],
+        set: {
+          adultos: insertAttendance.adultos,
+          criancas: insertAttendance.criancas,
+          convidados: insertAttendance.convidados,
+          veiculos: insertAttendance.veiculos,
+        },
+      })
       .returning();
     return attendance;
   }

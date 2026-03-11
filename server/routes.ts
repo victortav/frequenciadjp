@@ -126,7 +126,7 @@ export async function registerRoutes(
       const data = await storage.createAttendance({
         ...input,
         userId: user.id,
-      });
+      } as any);
       res.status(201).json(data);
     } catch (err) {
       if (err instanceof z.ZodError) {

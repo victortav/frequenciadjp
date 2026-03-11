@@ -63,7 +63,9 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Zod schema with coercion for form inputs
-const formSchema = insertAttendanceSchema.extend({
+const formSchema = insertAttendanceSchema
+  .omit({ userId: true })
+  .extend({
   igrejaId: z.coerce.number().min(1, "Selecione uma igreja"),
   adultos: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),
   criancas: z.coerce.number().min(0, "Deve ser maior ou igual a 0"),

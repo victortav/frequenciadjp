@@ -225,7 +225,12 @@ export default function Home() {
             </CardHeader>
             <CardContent className="pt-6">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={form.handleSubmit(
+                    onSubmit,
+                    (errors) => {
+                      console.log("FORM ERRORS", errors);
+                    }
+                  )} className="space-y-6">
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
